@@ -1,112 +1,110 @@
-# 🟧 BitVMX Lending Protocol MVP
+# BitVMX Lending Protocol
 
-A minimal proof-of-concept showing that **non-custodial BTC lending is possible** using BitVMX and Rootstock.
+An educational demonstration of a Bitcoin-based lending protocol using BitVMX and RSK smart contracts. This project includes a fully interactive mock frontend that visualizes the complete user flow for lending and borrowing Bitcoin.
 
-## 🎯 Goal
+## 🎯 Project Overview
 
-Demonstrate the simplest possible flow:
-1. **Lender** locks BTC on Bitcoin (non-custodial)
-2. **Borrower** can unlock it by repaying on RSK
-3. **BitVMX** ensures trustless execution
+This project demonstrates how BitVMX can enable trustless Bitcoin lending by:
+- Allowing lenders to lock BTC on the Bitcoin network
+- Deploying smart contracts on RSK for loan management
+- Using BitVMX proofs for secure withdrawals
+- Enabling borrowers to access Bitcoin liquidity
 
----
-
-## 📦 Project Structure
+## 📁 Project Structure
 
 ```
-bitvmx-lending-mvp/
-├── contracts/               # RSK smart contracts
-│   ├── LoanManager.sol
-│   └── MockUSD.sol          # Simple ERC20 stablecoin for POC
-├── bitvmx/                  # BitVMX challenge logic
-│   └── vm.c
-│   └── challenge.json
-├── btc/                     # Bitcoin lock/redeem scripts
-│   └── lock_btc.sh
-│   └── redeem_btc.sh
-├── prover/                  # Offchain proof generation
-│   └── Cargo.toml
-│   └── src/
-│       └── main.rs
-├── frontend/ (optional)     # Simple UI to simulate proof submission
-├── .env.example
-├── README.md
-└── CLAUDE.md
+bitvmx-lending/
+├── frontend/          # React + Tailwind CSS mock frontend
+├── docs/             # Documentation and design specifications
+│   ├── protocol_flow.md    # End-to-end protocol flow
+│   ├── user_content.md     # UI copy and content
+│   └── design_system.md    # Design guidelines
+└── AGENTS.md         # Multi-agent development plan
 ```
 
----
+## 🚀 Getting Started
 
-## 🧪 Minimal Flow
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
 
-1. **Lock**: Lender locks BTC with BitVMX script
-2. **Mint & Borrow**: Contract mints MockUSD stablecoin to borrower
-3. **Repay**: Borrower repays MockUSD + interest + generates proof
-4. **Unlock**: Valid proof allows lender to redeem BTC + burns MockUSD
-
----
-
-## 🚀 Quickstart
-
-### 1. Clone & Install
+### Installation
 
 ```bash
-git clone https://github.com/NuttakitDW/bitvmx-lending.git
-cd bitvmx-lending-mvp
+# Clone the repository
+git clone [repository-url]
+cd bitvmx-lending
+
+# Navigate to frontend
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start development server
+npm start
 ```
 
-### 2. Set up Environment
+Visit [http://localhost:3000](http://localhost:3000) to see the application.
 
-Copy and edit environment config:
+## 🏗️ Architecture
 
-```bash
-cp .env.example .env
-```
+### Frontend (Mock)
+- **Framework**: React with TypeScript
+- **Styling**: Tailwind CSS with custom design system
+- **State Management**: Zustand
+- **Routing**: React Router
 
-### 3. Lock BTC
+### Key Features
+1. **Lender Flow**: Create offers, lock BTC, track loans
+2. **Borrower Flow**: Browse offers, submit requests, repay
+3. **Verification**: BitVMX proof simulation
+4. **Educational**: Tutorials, tooltips, and guides
 
-```bash
-./btc/lock_btc.sh <borrower_pubkey>
-```
+## 📚 Documentation
 
-### 4. Deploy Smart Contract to RSK Testnet
+- **[Protocol Flow](docs/protocol_flow.md)**: Technical details of the lending protocol
+- **[User Content](docs/user_content.md)**: All UI copy and user-facing content
+- **[Design System](docs/design_system.md)**: Visual design guidelines and components
+- **[Frontend README](frontend/README.md)**: Frontend-specific documentation
 
-```bash
-cd contracts
-forge script script/Deploy.s.sol --rpc-url $RSK_TESTNET_RPC --broadcast
-```
+## 🎓 Educational Purpose
 
-### 5. Generate Proof
+This is a **mock implementation** designed for educational purposes. It demonstrates:
+- How BitVMX enables Bitcoin programmability
+- Smart contract interactions on RSK
+- User experience design for DeFi protocols
+- Security considerations in lending protocols
 
-```bash
-cd prover
-cargo run -- > proof.json
-```
+**Note**: This is not a production-ready implementation. All blockchain interactions are simulated.
 
-### 6. Submit Proof to RSK
+## 🛠️ Development
 
-```bash
-node submit_proof.js --loanId 1 --proof proof.json
-```
+### Multi-Agent Approach
+This project was developed using a multi-agent approach as outlined in [AGENTS.md](AGENTS.md):
+- **Researcher Agent**: Protocol flow definition
+- **Docs Agent**: User content creation
+- **Designer Agent**: Visual design system
+- **Dev Agent**: Frontend implementation
 
----
+## 🤝 Contributing
 
-## 📚 Dependencies
+Contributions that enhance the educational value of this project are welcome! Please focus on:
+- Improving explanations and tutorials
+- Adding more educational features
+- Enhancing the user experience
+- Fixing bugs or improving performance
 
-* Node.js + web3
-* Foundry (for contract deployment)
-* Rust + Cargo (for proof generation)
-* Bitcoin Core or Libbitcoin (for BTC ops)
-* BitVMX C runtime (for custom logic)
+## 📄 License
 
----
+MIT License - This is an open educational resource.
+
+## 🔗 Resources
+
+- [BitVMX Documentation](https://bitvmx.org)
+- [RSK Documentation](https://developers.rsk.co)
+- [Bitcoin Developer Guide](https://developer.bitcoin.org)
 
 ## ⚠️ Disclaimer
 
-**Minimal MVP only** — demonstrates that non-custodial BTC lending is technically possible. Not production-ready.
-
----
-
-## 🙌 Credits
-
-* BitVMX by @supertestnet
-* RSK for Bitcoin-EVM bridging
+This is a mock educational project. It does not interact with real Bitcoin or RSK networks. Do not use this code for production applications without proper security audits and real blockchain integration.
