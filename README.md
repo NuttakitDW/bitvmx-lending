@@ -1,10 +1,13 @@
 # 🟧 BitVMX Lending Protocol MVP
 
-This is a minimal proof-of-concept demonstrating how to build a non-custodial BTC-backed lending protocol using [BitVMX](https://github.com/BitVM/BitVM) and [Rootstock (RSK)](https://www.rsk.co/).
+A minimal proof-of-concept showing that **non-custodial BTC lending is possible** using BitVMX and Rootstock.
 
 ## 🎯 Goal
 
-Allow a **lender** to lock BTC on Bitcoin testnet and a **borrower** to redeem it using an offchain-verifiable **BitVMX proof** triggered through an onchain contract on RSK.
+Demonstrate the simplest possible flow:
+1. **Lender** locks BTC on Bitcoin (non-custodial)
+2. **Borrower** can unlock it by repaying on RSK
+3. **BitVMX** ensures trustless execution
 
 ---
 
@@ -13,7 +16,8 @@ Allow a **lender** to lock BTC on Bitcoin testnet and a **borrower** to redeem i
 ```
 bitvmx-lending-mvp/
 ├── contracts/               # RSK smart contracts
-│   └── LoanManager.sol
+│   ├── LoanManager.sol
+│   └── MockUSD.sol          # Simple ERC20 stablecoin for POC
 ├── bitvmx/                  # BitVMX challenge logic
 │   └── vm.c
 │   └── challenge.json
@@ -21,7 +25,9 @@ bitvmx-lending-mvp/
 │   └── lock_btc.sh
 │   └── redeem_btc.sh
 ├── prover/                  # Offchain proof generation
-│   └── generate_proof.py
+│   └── Cargo.toml
+│   └── src/
+│       └── main.rs
 ├── frontend/ (optional)     # Simple UI to simulate proof submission
 ├── .env.example
 ├── README.md
@@ -30,13 +36,12 @@ bitvmx-lending-mvp/
 
 ---
 
-## 🧪 How It Works
+## 🧪 Minimal Flow
 
-1. **Lender** locks BTC using a Taproot/P2SH script on Bitcoin Testnet.
-2. **LoanManager.sol** on RSK tracks the loan and awaits a valid proof.
-3. **Borrower** repays in RBTC and generates a BitVMX proof of repayment.
-4. Offchain BitVMX logic verifies the claim and submits a result to the RSK contract.
-5. RSK contract updates state and allows BTC redemption if the proof is valid.
+1. **Lock**: Lender locks BTC with BitVMX script
+2. **Mint & Borrow**: Contract mints MockUSD stablecoin to borrower
+3. **Repay**: Borrower repays MockUSD + interest + generates proof
+4. **Unlock**: Valid proof allows lender to redeem BTC + burns MockUSD
 
 ---
 
@@ -45,7 +50,7 @@ bitvmx-lending-mvp/
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourname/bitvmx-lending-mvp.git
+git clone https://github.com/NuttakitDW/bitvmx-lending.git
 cd bitvmx-lending-mvp
 ```
 
@@ -67,14 +72,14 @@ cp .env.example .env
 
 ```bash
 cd contracts
-truffle migrate --network rskTestnet
+forge script script/Deploy.s.sol --rpc-url $RSK_TESTNET_RPC --broadcast
 ```
 
 ### 5. Generate Proof
 
 ```bash
 cd prover
-python generate_proof.py > proof.json
+cargo run -- > proof.json
 ```
 
 ### 6. Submit Proof to RSK
@@ -88,8 +93,8 @@ node submit_proof.js --loanId 1 --proof proof.json
 ## 📚 Dependencies
 
 * Node.js + web3
-* Truffle (for contract deployment)
-* Python (for proof script)
+* Foundry (for contract deployment)
+* Rust + Cargo (for proof generation)
 * Bitcoin Core or Libbitcoin (for BTC ops)
 * BitVMX C runtime (for custom logic)
 
@@ -97,7 +102,7 @@ node submit_proof.js --loanId 1 --proof proof.json
 
 ## ⚠️ Disclaimer
 
-This is an educational MVP — **not secure or production-ready**. It demonstrates how BitVMX enables conditional BTC flows using offchain verification and EVM-compatible onchain enforcement.
+**Minimal MVP only** — demonstrates that non-custodial BTC lending is technically possible. Not production-ready.
 
 ---
 
